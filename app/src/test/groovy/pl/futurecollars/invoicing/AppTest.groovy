@@ -13,15 +13,5 @@ class AppTest extends Specification {
 
         and:
         app.main()
-
-    def "application has a greeting"() {
-        setup:
-        def app = new App()
-
-        when:
-        def result = app.greeting
-
-        then:
-        result != null
     }
 }
