@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing
+package pl.futurecollars.invoicing.helpers
 
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
@@ -12,7 +12,7 @@ class TestHelpers {
     static company(int id) {
         new Company(("$id").repeat(10),
                 "ul. Bukowinska 24d/$id 02-703 Warszawa, Polska",
-                "iCode Trust $id Sp. z o.o");
+                "iCode Trust $id Sp. z o.o")
     }
 
     static product(int id) {
