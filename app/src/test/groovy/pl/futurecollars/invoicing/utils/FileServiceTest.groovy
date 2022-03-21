@@ -47,6 +47,15 @@ class FilesServiceTest extends Specification {
         ["2"] == Files.readAllLines(path)
     }
 
+    def "line are correctly read from file any text"() {
+        setup:
+        def lines = List.of("line 1", "line 2", "line 3")
+        Files.write(path, lines)
+
+        expect:
+        lines == filesService.readAllLines(path)
+    }
+
     def "list of lines is correctly written to file"() {
         given:
         def digits = ['1', '2', '3']
@@ -69,13 +78,15 @@ class FilesServiceTest extends Specification {
         letters == Files.readAllLines(path)
     }
 
-    def "line is correctly read from file"() {
-        setup:
-        def lines = List.of("line 1", "line 2", "line 3")
-        Files.write(path, lines)
+    def "runtime error thrown when try to read from a missing database"() {
+        given:
+        Files.delete(path)
 
-        expect:
-        lines == filesService.readAllLines(path)
+        when:
+        filesService.readAllLines(path)
+
+        then:
+        thrown(IOException)
     }
 
     def "empty file returns empty collection"() {

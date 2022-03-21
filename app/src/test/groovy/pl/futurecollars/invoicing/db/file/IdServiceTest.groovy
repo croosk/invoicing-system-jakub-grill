@@ -8,46 +8,46 @@ import java.nio.file.Path
 
 class IdServiceTest extends Specification {
 
-    private Path nextIdDbPath = File.createTempFile('nextId', '.txt').toPath()
+    private Path nextIdDatabasePath = File.createTempFile('nextId', '.txt').toPath()
 
-    def "next id starts from 1 if file was empty"() {
+    def "if file was empty, starts next id from 1"() {
         given:
-        IdService idService = new IdService(nextIdDbPath, new FileService())
+        IdService idService = new IdService(nextIdDatabasePath, new FileService())
 
         expect:
-        ['1'] == Files.readAllLines(nextIdDbPath)
+        ['1'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        1 == idService.getNextIdAndIncreament()
-        ['2'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['2'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        2 == idService.getNextIdAndIncreament()
-        ['3'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['3'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        3 == idService.getNextIdAndIncreament()
-        ['4'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['4'] == Files.readAllLines(nextIdDatabasePath)
     }
 
-    def "next id starts from last number if file was not empty"() {
+    def "if file was not empty, starts next id from last number"() {
         given:
-        Files.writeString(nextIdDbPath, "17")
-        IdService idService = new IdService(nextIdDbPath, new FileService())
+        Files.writeString(nextIdDatabasePath, "96")
+        IdService idService = new IdService(nextIdDatabasePath, new FileService())
 
         expect:
-        ['17'] == Files.readAllLines(nextIdDbPath)
+        ['96'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        17 == idService.getNextIdAndIncreament()
-        ['18'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['97'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        18 == idService.getNextIdAndIncreament()
-        ['19'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['98'] == Files.readAllLines(nextIdDatabasePath)
 
         and:
-        19 == idService.getNextIdAndIncreament()
-        ['20'] == Files.readAllLines(nextIdDbPath)
+        idService.getNextIdAndIncreament()
+        ['99'] == Files.readAllLines(nextIdDatabasePath)
     }
 }

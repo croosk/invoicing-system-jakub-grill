@@ -17,17 +17,17 @@ public class FileBasedDatabase implements Database {
   private final Path databasePath;
   private final IdService idService;
   private final FileService fileService;
-  private final JsonService<Invoice> jsonService;
+  private final JsonService jsonService;
 
   @Override
   public int save(Invoice invoice) {
     try {
       invoice.setId(idService.getNextIdAndIncreament());
-      String convert = jsonService.convertToJson(invoice);
+      String convert = jsonService.convertToString(invoice);
       fileService.appendLineToFile(databasePath, convert);
       return invoice.getId();
-    } catch (IOException ex) {
-      throw new RuntimeException("Database failed to save invoice", ex);
+    } catch (IOException expection) {
+      throw new RuntimeException("Database failed to save invoice", expection);
     }
   }
 
@@ -37,10 +37,10 @@ public class FileBasedDatabase implements Database {
       return fileService.readAllLines(databasePath)
           .stream()
           .filter(line -> containsId(line, id))
-          .map(line -> jsonService.convertToObject(line, Invoice.class))
+          .map(jsonService::convertToObject)
           .findFirst();
-    } catch (IOException ex) {
-      throw new RuntimeException("Database failed to get invoice with id: " + id, ex);
+    } catch (IOException expection) {
+      throw new RuntimeException("Database failed to get invoice with id: " + id, expection);
     }
   }
 
@@ -49,10 +49,10 @@ public class FileBasedDatabase implements Database {
     try {
       return fileService.readAllLines(databasePath)
           .stream()
-          .map(line -> jsonService.convertToObject(line, Invoice.class))
+          .map(jsonService::convertToObject)
           .collect(Collectors.toList());
-    } catch (IOException ex) {
-      throw new RuntimeException("Failed to read invoices from file", ex);
+    } catch (IOException expection) {
+      throw new RuntimeException("Failed to read invoices from file", expection);
     }
   }
 
@@ -69,12 +69,11 @@ public class FileBasedDatabase implements Database {
         throw new IllegalArgumentException("Id " + id + " does not exist");
       }
       updatedInvoice.setId(id);
-      String ddd = jsonService.convertToJson(updatedInvoice);
-      listWithoutInvoiceWithGivenId.add(ddd);
+      String convert = jsonService.convertToString(updatedInvoice);
+      listWithoutInvoiceWithGivenId.add(convert);
       fileService.writeLinesToFile(databasePath, listWithoutInvoiceWithGivenId);
-
-    } catch (IOException ex) {
-      throw new RuntimeException("Failed to update invoice with id: " + id, ex);
+    } catch (IOException expection) {
+      throw new RuntimeException("Failed to update invoice with id: " + id, expection);
     }
   }
 
@@ -87,8 +86,8 @@ public class FileBasedDatabase implements Database {
           .collect(Collectors.toList());
       fileService.writeLinesToFile(databasePath, updatedList);
 
-    } catch (IOException ex) {
-      throw new RuntimeException("Failed to delete invoice with id: " + id, ex);
+    } catch (IOException expection) {
+      throw new RuntimeException("Failed to delete invoice with id: " + id, expection);
     }
   }
 

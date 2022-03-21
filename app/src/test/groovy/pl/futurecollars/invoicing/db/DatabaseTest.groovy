@@ -79,11 +79,11 @@ abstract class DatabaseTest extends Specification {
 
     def "updating not existing invoice throws exception"() {
         when:
-        database.update(213, invoices.get(1))
+        database.update(590, invoices.get(1))
 
         then:
         def ex = thrown(IllegalArgumentException)
-        ex.message == "Id 213 does not exist"
+        ex.message == "Id 590 does not exist"
     }
 
 }

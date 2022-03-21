@@ -3,8 +3,9 @@ package pl.futurecollars.invoicing.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import pl.futurecollars.invoicing.model.Invoice;
 
-public class JsonService<T> {
+public class JsonService {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -13,19 +14,19 @@ public class JsonService<T> {
     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
 
-  public String convertToJson(T object) {
+  public String convertToString(Invoice invoice) {
     try {
-      return objectMapper.writeValueAsString(object);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Failed to convert string to JSON", e);
+      return objectMapper.writeValueAsString(invoice);
+    } catch (JsonProcessingException expection) {
+      throw new RuntimeException("Failed to convert string to JSON", expection);
     }
   }
 
-  public T convertToObject(String json, Class<T> clazz) {
+  public Invoice convertToObject(String objectAsString) {
     try {
-      return objectMapper.readValue(json, clazz);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Failed to parse JSON", e);
+      return objectMapper.readValue(objectAsString, Invoice.class);
+    } catch (JsonProcessingException expection) {
+      throw new RuntimeException("Failed to parse JSON", expection);
     }
   }
 }

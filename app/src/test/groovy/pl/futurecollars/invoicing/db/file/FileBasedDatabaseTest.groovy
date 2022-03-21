@@ -14,8 +14,8 @@ class FileBasedDatabaseTest extends DatabaseTest {
 
     @Override
     Database getDatabaseInstance() {
-        def fileService = new FileService()
 
+        def fileService = new FileService()
         def idPath = File.createTempFile('ids', '.txt').toPath()
         def idService = new IdService(idPath, fileService)
 
