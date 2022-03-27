@@ -1,4 +1,4 @@
-package pl.futurecollars.invoicing
+package pl.futurecollars.invoicing.helpers
 
 import pl.futurecollars.invoicing.model.Company
 import pl.futurecollars.invoicing.model.Invoice
@@ -11,12 +11,11 @@ class TestHelpers {
 
     static company(int id) {
         new Company(("$id").repeat(10),
-                "ul. Bukowinska 24d/$id 02-703 Warszawa, Polska",
-                "iCode Trust $id Sp. z o.o");
+                "ul. Ćwiartki 3/4 $id 66-312 Warszawa, Polska", "Piekarnia Bagietka $id sp. z o.o")
     }
 
     static product(int id) {
-        new InvoiceEntry("Programming course $id", BigDecimal.valueOf(id * 1000), BigDecimal.valueOf(id * 1000 * 0.08), Vat.VAT_8)
+        new InvoiceEntry("Baking and delivering breads and sweet goods $id", BigDecimal.valueOf(id * 500), BigDecimal.valueOf(id * 500 * 0.05), Vat.VAT_5)
     }
 
     static invoice(int id) {
