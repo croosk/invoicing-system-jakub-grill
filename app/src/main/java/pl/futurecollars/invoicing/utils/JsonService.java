@@ -17,16 +17,16 @@ public class JsonService {
   public String convertToString(Invoice invoice) {
     try {
       return objectMapper.writeValueAsString(invoice);
-    } catch (JsonProcessingException expection) {
-      throw new RuntimeException("Failed to convert string to JSON", expection);
+    } catch (JsonProcessingException exception) {
+      throw new RuntimeException("Failed to convert string to JSON", exception);
     }
   }
 
   public Invoice convertToObject(String objectAsString) {
     try {
       return objectMapper.readValue(objectAsString, Invoice.class);
-    } catch (JsonProcessingException expection) {
-      throw new RuntimeException("Failed to parse JSON", expection);
+    } catch (JsonProcessingException exception) {
+      throw new RuntimeException("Failed to parse JSON", exception);
     }
   }
 }

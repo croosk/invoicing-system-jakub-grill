@@ -61,29 +61,26 @@ abstract class DatabaseTest extends Specification {
         database.getAll().isEmpty()
     }
 
-    def "deleting not existing invoice is not causing any error"() {
+    def "deleting not existing invoice returns Optional.empty"() {
         expect:
-        database.delete(123)
+        database.delete(123) == Optional.empty()
     }
 
-    def "it's possible to update the invoice"() {
+    def "update the existing invoice returns old invoice"() {
         given:
-        int id = database.save(invoices.get(0))
+        def oldInvoice = invoices.get(0)
+        int id = database.save(oldInvoice)
 
         when:
-        database.update(id, invoices.get(1))
+        def result = database.update(id, invoices.get(1))
 
         then:
         database.getById(id).get() == invoices.get(1)
+        result == Optional.of(oldInvoice)
     }
 
-    def "updating not existing invoice throws exception"() {
-        when:
-        database.update(590, invoices.get(1))
-
-        then:
-        def ex = thrown(IllegalArgumentException)
-        ex.message == "Id 590 does not exist"
+    def "updating not existing invoice returns Optional.empty"() {
+        expect:
+        database.update(590, invoices.get(1)) == Optional.empty()
     }
-
 }
