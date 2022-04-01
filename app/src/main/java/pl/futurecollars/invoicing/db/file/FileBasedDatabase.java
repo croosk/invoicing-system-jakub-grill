@@ -26,8 +26,8 @@ public class FileBasedDatabase implements Database {
       String convert = jsonService.convertToString(invoice);
       fileService.appendLineToFile(databasePath, convert);
       return invoice.getId();
-    } catch (IOException expection) {
-      throw new RuntimeException("Database failed to save invoice", expection);
+    } catch (IOException exception) {
+      throw new RuntimeException("Database failed to save invoice", exception);
     }
   }
 
@@ -39,8 +39,8 @@ public class FileBasedDatabase implements Database {
           .filter(line -> containsId(line, id))
           .map(jsonService::convertToObject)
           .findFirst();
-    } catch (IOException expection) {
-      throw new RuntimeException("Database failed to get invoice with id: " + id, expection);
+    } catch (IOException exception) {
+      throw new RuntimeException("Database failed to get invoice with id: " + id, exception);
     }
   }
 
@@ -51,43 +51,46 @@ public class FileBasedDatabase implements Database {
           .stream()
           .map(jsonService::convertToObject)
           .collect(Collectors.toList());
-    } catch (IOException expection) {
-      throw new RuntimeException("Failed to read invoices from file", expection);
+    } catch (IOException exception) {
+      throw new RuntimeException("Failed to read invoices from file", exception);
     }
   }
 
   @Override
-  public void update(int id, Invoice updatedInvoice) {
+  public Optional<Invoice> update(int id, Invoice updatedInvoice) {
+    Optional<Invoice> toUpdate = getById(id);
+    updatedInvoice.setId(id);
+
     try {
-      List<String> allInvoices = fileService.readAllLines(databasePath);
-      List<String> listWithoutInvoiceWithGivenId = allInvoices
+      List<String> updatedList = fileService.readAllLines(databasePath)
           .stream()
           .filter(line -> !containsId(line, id))
           .collect(Collectors.toList());
 
-      if (allInvoices.size() == listWithoutInvoiceWithGivenId.size()) {
-        throw new IllegalArgumentException("Id " + id + " does not exist");
-      }
-      updatedInvoice.setId(id);
       String convert = jsonService.convertToString(updatedInvoice);
-      listWithoutInvoiceWithGivenId.add(convert);
-      fileService.writeLinesToFile(databasePath, listWithoutInvoiceWithGivenId);
-    } catch (IOException expection) {
-      throw new RuntimeException("Failed to update invoice with id: " + id, expection);
+      updatedList.add(convert);
+      fileService.writeLinesToFile(databasePath, updatedList);
+      return toUpdate;
+
+    } catch (IOException exception) {
+      throw new RuntimeException("Failed to update invoice with id: " + id, exception);
     }
   }
 
   @Override
-  public void delete(int id) {
+  public Optional<Invoice> delete(int id) {
+    Optional<Invoice> toDelete = getById(id);
+
     try {
       List<String> updatedList = fileService.readAllLines(databasePath)
           .stream()
           .filter(line -> !containsId(line, id))
           .collect(Collectors.toList());
       fileService.writeLinesToFile(databasePath, updatedList);
+      return toDelete;
 
-    } catch (IOException expection) {
-      throw new RuntimeException("Failed to delete invoice with id: " + id, expection);
+    } catch (IOException exception) {
+      throw new RuntimeException("Failed to delete invoice with id: " + id, exception);
     }
   }
 
