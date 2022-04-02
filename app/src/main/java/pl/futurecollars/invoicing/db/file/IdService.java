@@ -3,7 +3,7 @@ package pl.futurecollars.invoicing.db.file;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import pl.futurecollars.invoicing.utils.FileService;
+import pl.futurecollars.invoicing.service.FileService;
 
 public class IdService {
 

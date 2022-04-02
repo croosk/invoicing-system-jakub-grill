@@ -1,6 +1,6 @@
 package pl.futurecollars.invoicing.db.file
 
-import pl.futurecollars.invoicing.utils.FileService
+import pl.futurecollars.invoicing.service.FileService
 import spock.lang.Specification
 
 import java.nio.file.Files
